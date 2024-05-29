@@ -84,6 +84,7 @@ describe('MeComponent', () => {
   describe('NgOnInit', () => {
     test('if it calls userService.getById with session ID and update user', () => {
       component.ngOnInit()
+
       expect(component.user).toEqual(mockUser)
       expect(mockUserService.getById).toHaveBeenCalledWith("1")
     });
@@ -93,7 +94,9 @@ describe('MeComponent', () => {
   describe('back', () => {
     it('should go back', () => {
       const historySpy: any = jest.spyOn(window.history, 'back')
+
       component.back()
+
       expect(historySpy).toHaveBeenCalled();
     });
   });
