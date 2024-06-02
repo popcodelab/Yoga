@@ -13,7 +13,7 @@ import { expect } from '@jest/globals';
 import {By} from "@angular/platform-browser";
 import {DebugElement} from "@angular/core";
 
-describe('ListComponent integration test',() =>{
+describe('ListComponent integration tests',() =>{
   let fixture: ComponentFixture<ListComponent>;
   let sessionService: SessionService;
   let httpMock: HttpTestingController;

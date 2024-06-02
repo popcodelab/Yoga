@@ -21,7 +21,7 @@ import {MatIconModule} from "@angular/material/icon";
 describe('DetailComponent', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>;
-  let service: SessionService;
+  let sessionService: SessionService;
 
   const mockSession: Session = {
     id: 1,
@@ -95,7 +95,8 @@ describe('DetailComponent', () => {
       ],
     })
       .compileComponents();
-    service = TestBed.inject(SessionService);
+
+    sessionService = TestBed.inject(SessionService);
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -135,8 +136,9 @@ describe('DetailComponent', () => {
   });
 
   describe('unParticipate', () => {
-    it('should call unParticipate method', () => {
+    it('should call unParticipate method and fetch the session', () => {
       component.unParticipate();
+
       expect(mockSessionApiService.unParticipate).toHaveBeenCalledWith(component.sessionId, component.userId);
     });
   });
