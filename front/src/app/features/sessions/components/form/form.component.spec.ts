@@ -1,24 +1,26 @@
-import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {  ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import {HttpClientModule} from '@angular/common/http';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
-import { expect } from '@jest/globals';
-import { SessionService } from 'src/app/services/session.service';
-import { SessionApiService } from '../../services/session-api.service';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {RouterTestingModule} from '@angular/router/testing';
+import {expect} from '@jest/globals';
+import {SessionService} from 'src/app/services/session.service';
+import {SessionApiService} from '../../services/session-api.service';
 
-import { FormComponent } from './form.component';
+import {FormComponent} from './form.component';
 import {Session} from "../../interfaces/session.interface";
 
-import { jest } from '@jest/globals';
+import {jest} from '@jest/globals';
 import {of} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
+import {DebugElement} from "@angular/core";
+import {By} from "@angular/platform-browser";
 
 describe('FormComponent', () => {
   let component: FormComponent;
@@ -40,28 +42,27 @@ describe('FormComponent', () => {
   }
 
   const mockRouter = {
-    navigate : jest.fn(),
-    url : "/update"
+    navigate: jest.fn(),
+    url: "/update"
   }
 
   const mockSessionApiService = {
-    detail : jest.fn().mockReturnValue(of(mockSession)),
-    create : jest.fn().mockReturnValue(of(mockSession)),
-    update : jest.fn().mockReturnValue(of(mockSession))
+    detail: jest.fn().mockReturnValue(of(mockSession)),
+    create: jest.fn().mockReturnValue(of(mockSession)),
+    update: jest.fn().mockReturnValue(of(mockSession))
   }
 
   const mockActivatedRoute = {
     snapshot: {
       paramMap: {
-        get : jest.fn().mockReturnValue("1")
+        get: jest.fn().mockReturnValue("1")
       }
     }
   }
 
   const mockMatSnackBar = {
-    open : jest.fn()
+    open: jest.fn()
   }
-
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -79,11 +80,11 @@ describe('FormComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        { provide: SessionService, useValue: mockSessionService },
-        { provide: SessionApiService, useValue: mockSessionApiService },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        { provide: Router, useValue: mockRouter },
-        { provide: MatSnackBar, useValue: mockMatSnackBar }
+        {provide: SessionService, useValue: mockSessionService},
+        {provide: SessionApiService, useValue: mockSessionApiService},
+        {provide: ActivatedRoute, useValue: mockActivatedRoute},
+        {provide: Router, useValue: mockRouter},
+        {provide: MatSnackBar, useValue: mockMatSnackBar}
       ],
       declarations: [FormComponent]
     })
@@ -131,7 +132,7 @@ describe('FormComponent', () => {
       component.submit();
 
       expect(mockSessionApiService.create).toHaveBeenCalledWith(session)
-      expect(mockMatSnackBar.open).toHaveBeenCalledWith('Session created !', 'Close', { duration: 3000 });
+      expect(mockMatSnackBar.open).toHaveBeenCalledWith('Session created !', 'Close', {duration: 3000});
       expect(mockRouter.navigate).toHaveBeenCalledWith(['sessions']);
     });
 
@@ -145,8 +146,54 @@ describe('FormComponent', () => {
       component.submit();
 
       expect(mockSessionApiService.update).toHaveBeenCalledWith('1', session);
-      expect(mockMatSnackBar.open).toHaveBeenCalledWith('Session updated !', 'Close', { duration: 3000 });
+      expect(mockMatSnackBar.open).toHaveBeenCalledWith('Session updated !', 'Close', {duration: 3000});
       expect(mockRouter.navigate).toHaveBeenCalledWith(['sessions']);
+    });
+  });
+
+
+  describe('form fields', () => {
+    beforeEach(() => {
+      component.ngOnInit()
+      fixture.detectChanges()
+    })
+    test('if all the fields are presents on the form to create or edit a session', () => {
+      const nativeEl = fixture.nativeElement;
+
+      const form = nativeEl.querySelector('form');
+      expect(form).toBeTruthy();
+
+      const nameInput = form.querySelector('input[formcontrolname=name]');
+      expect(nameInput).toBeTruthy();
+
+      const dateInput = form.querySelector('input[formcontrolname=date]');
+      expect(dateInput).toBeTruthy();
+
+      const teacherSelect = form.querySelector('mat-select[formcontrolname=teacher_id]');
+      expect(teacherSelect).toBeTruthy();
+
+      const descriptionTextarea = form.querySelector('textarea[formcontrolname=description]');
+      expect(descriptionTextarea).toBeTruthy();
+    });
+
+    it('should disable the submit button if the form is invalid', () => {
+      const nativeEl = fixture.nativeElement;
+
+      component.sessionForm?.controls['name'].setValue('');
+      fixture.detectChanges();
+
+      const submitButton: HTMLButtonElement = nativeEl.querySelector('button[type="submit"]') as HTMLButtonElement;
+      expect(submitButton.disabled).toBeTruthy();
+    });
+
+    it('should have a valid form when all fields are filled', () => {
+      component.sessionForm?.controls['name'].setValue('Hatha yoga course');
+      component.sessionForm?.controls['description'].setValue('Hatha yoga is an ancient Indian practice ' +
+        'aimed at improving both body and mind through postures.');
+      component.sessionForm?.controls['date'].setValue('2024-08-05');
+      component.sessionForm?.controls['teacher_id'].setValue('1');
+
+      expect(component.sessionForm?.valid).toBeTruthy();
     });
   });
 
