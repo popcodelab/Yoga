@@ -27,6 +27,12 @@ describe('SessionService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should have default isLogged as false', () => {
+    service.$isLogged().subscribe(isLogged => {
+      expect(isLogged).toBe(false);
+    });
+  });
+
   describe('logIn', () => {
     beforeEach(() => {
       service.logIn(sessionInformationMock)

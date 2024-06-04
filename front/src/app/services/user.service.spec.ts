@@ -4,7 +4,6 @@ import { jest } from '@jest/globals';
 import { expect } from '@jest/globals';
 
 import { UserService } from './user.service';
-import {TeacherService} from "./teacher.service";
 import {of} from "rxjs";
 
 describe('UserService', () => {
