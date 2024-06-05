@@ -22,14 +22,17 @@ describe('Login spec', () => {
         method: 'GET',
         url: '/api/session',
       },
-      []).as('session')
+      []);
 
     // When
-    cy.get('input[formControlName=email]').type("yoga@studio.com")
-    cy.get('input[formControlName=password]').type(`${"test!1234"}{enter}{enter}`)
+    cy.get('input[formControlName=email]').type("yoga@studio.com");
+    cy.get('input[formControlName=password]').type("test!1234");
+    cy.get('button[type=submit]').click();
 
     // Then
     cy.url().should('include', '/sessions')
+    cy.get('span').should('exist', 'Logout');
+    cy.get('[data-testid="logout-test"]').should('exist', 'Logout');
   });
 
   it('Should failed if using wrong credentials', () => {
@@ -46,7 +49,7 @@ describe('Login spec', () => {
         method: 'GET',
         url: '/api/session',
       },
-      []).as('session');
+      []);
 
     // When
     cy.get('input[formControlName=email]').type("yogi@studio.com");

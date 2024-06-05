@@ -17,7 +17,7 @@ describe('Register spec', () => {
         method: 'GET',
         url: '/api/auth/login',
       },
-      []).as('login')
+      []);
 
     //When
     cy.get('input[formControlName=firstName]').type("John");
