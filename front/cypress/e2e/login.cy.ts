@@ -1,10 +1,12 @@
-describe('Login e2e test', () => {
+import * as cypress from "cypress";
 
+describe('Login spec', () => {
   beforeEach(() => {
-    cy.visit('/login')
+    cy.visit('/login');
   });
 
-  it('Should log the user in successfully', () => {
+  it('Login successful', () => {
+  // Given
     cy.intercept('POST', '/api/auth/login', {
       body: {
         id: 1,
@@ -22,28 +24,62 @@ describe('Login e2e test', () => {
       },
       []).as('session')
 
+    // When
     cy.get('input[formControlName=email]').type("yoga@studio.com")
     cy.get('input[formControlName=password]').type(`${"test!1234"}{enter}{enter}`)
 
+    // Then
     cy.url().should('include', '/sessions')
   });
 
-  it('should not log the user in', () => {
-
+  it('Should failed if using wrong credentials', () => {
+    // Given
     cy.intercept('POST', '/api/auth/login', {
-      statusCode: 404,
-      body: 'Not Found',
-    }).as('apiRequest');
+      statusCode: 401,
+      body: {
+        message: 'Bad credentials'
+      },
+    }).as('loginFailure');
 
-    cy.get('mat-card-title').should('have.text', 'Login');
+    cy.intercept(
+      {
+        method: 'GET',
+        url: '/api/session',
+      },
+      []).as('session');
 
-    cy.get('input[formControlName=email]').type("yoga")
-    cy.get('input[formControlName=password]').type(`${"test"}{enter}{enter}`)
+    // When
+    cy.get('input[formControlName=email]').type("yogi@studio.com");
+    cy.get('input[formControlName=password]').type("test!1234");
+    cy.get('button[type=submit]').click();
 
-    cy.get('.error' ).should('be.visible').should('have.text', 'An error occurred');
+    cy.wait('@loginFailure');
 
-    cy.get('mat-card-title').should('be.visible')
+    // Then
+    cy.get('.error').should('be.visible').and('contain', 'An error occurred');
 
   });
+
+  it('should disabled submit button if the email field is empty', () => {
+    // Given
+    cy.get('input[formControlName=email]').clear;
+    cy.get('input[formControlName=password]').type("test!1234");
+
+    // Then
+    cy.get('input[formControlName=email]').should('have.class', 'ng-invalid');
+    cy.get('button[type=submit]').should('be.disabled');
+  });
+
+  it('should disabled submit button if the password field is empty', () => {
+    // Given
+    cy.get('input[formControlName=password]').clear;
+    cy.get('input[formControlName=email]').type("yoga@studio.com");
+
+    // Then
+    cy.get('input[formControlName=password]').should('have.class', 'ng-invalid');
+    cy.get('button[type=submit]').should('be.disabled');
+  });
+
+
 
 });
