@@ -1,5 +1,5 @@
 import * as cypress from "cypress";
-describe('Not Found Page', () => {
+describe('Not Found spec', () => {
   it('should display the not found page for any unknown route', () => {
     // Given
     cy.visit('/wrong-url');

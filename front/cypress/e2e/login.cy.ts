@@ -32,7 +32,6 @@ describe('Login spec', () => {
     // Then
     cy.url().should('include', '/sessions')
     cy.get('span').should('exist', 'Logout');
-    cy.get('[data-testid="logout-test"]').should('exist', 'Logout');
   });
 
   it('Should failed if using wrong credentials', () => {

@@ -139,7 +139,7 @@ describe('FormComponent', () => {
     const session: Session = {
       id: 1,
       name: 'Hatha Yoga Session',
-      date: new Date('2023-05-20'),
+      date: new Date('2024-10-15'),
       teacher_id: 1,
       description: 'Hatha yoga is an ancient Indian practice aimed at improving both body and mind through postures.',
       users: []
