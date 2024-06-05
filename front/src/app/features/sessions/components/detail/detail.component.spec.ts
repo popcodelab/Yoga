@@ -36,8 +36,8 @@ describe('DetailComponent', () => {
     id: 23,
     lastName: "John",
     firstName: "Doe",
-    createdAt: new Date("2023-10-05"),
-    updatedAt: new Date("2023-10-05")
+    createdAt: new Date("2024-06-01"),
+    updatedAt: new Date("2024-06-01")
   };
 
   const mockActivatedRoute: { snapshot: { paramMap: { get: () => string } } } = {
