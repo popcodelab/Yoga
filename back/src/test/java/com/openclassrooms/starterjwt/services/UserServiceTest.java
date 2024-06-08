@@ -50,7 +50,6 @@ public class UserServiceTest {
         userService = null;
     }
 
-    @Tag("CRUD")
     @Test
     @DisplayName("Delete user")
     public void delete_ShouldDeleteUser() {
@@ -66,7 +65,6 @@ public class UserServiceTest {
         assertThat(userRepository.existsById(1L)).isFalse();
     }
 
-    @Tag("CRUD")
     @Test
     @DisplayName("Get user by its ID")
     public void findById_WhenUserExists_ShouldReturnUser() {
@@ -84,7 +82,6 @@ public class UserServiceTest {
         verify(userRepository).findById(userId);
     }
 
-    @Tag("CRUD")
     @Test
     @DisplayName("Get user by its ID should return null if not found")
     public void findById_WhenUserDoesNotExist_ShouldReturnNull() {
