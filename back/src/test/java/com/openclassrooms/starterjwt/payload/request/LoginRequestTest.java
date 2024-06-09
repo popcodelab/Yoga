@@ -85,6 +85,7 @@ public class LoginRequestTest {
 
         // Assert
         Set<ConstraintViolation<LoginRequest>> violations = VALIDATOR.validate(loginRequest);
+        assertFalse(violations.isEmpty());
     }
 
 }
