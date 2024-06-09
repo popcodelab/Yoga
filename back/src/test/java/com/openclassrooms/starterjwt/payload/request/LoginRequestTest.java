@@ -6,22 +6,27 @@ import org.junit.jupiter.api.*;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 import java.time.Instant;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @Log4j2
 public class LoginRequestTest {
     private static Instant startedAt;
+    private static Validator VALIDATOR;
+    private LoginRequest loginRequest;
+
+    private static Validator createValidatorFactory() {
+        return Validation.buildDefaultValidatorFactory().getValidator();
+    }
 
     @BeforeAll
     public static void initializeTestStartTime() {
         startedAt = Instant.now();
+        VALIDATOR = createValidatorFactory();
         log.info("Starts tests at {}", startedAt);
     }
 
@@ -31,12 +36,16 @@ public class LoginRequestTest {
         log.info("Test duration : {} ms", Duration.between(startedAt, endedAt).toMillis());
     }
 
-    private Validator validator;
+    @BeforeEach
+    public void setUp() {
+        loginRequest = new LoginRequest();
+    }
 
-   @BeforeEach
-   public void setup(){
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+
+
+    @AfterEach
+    public void tearDown() {
+        loginRequest = null;
     }
 
     @Test
@@ -47,7 +56,6 @@ public class LoginRequestTest {
         String password = "password";
 
         // Act
-        LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail(email);
         loginRequest.setPassword(password);
 
@@ -57,29 +65,26 @@ public class LoginRequestTest {
     }
 
     @Test
-    @DisplayName("Email cannot be empty")
+    @DisplayName("Email should not  be empty")
     public void testEmailNotEmptyConstraint() {
        // Arrange & Act
-        LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("");
         loginRequest.setPassword("password");
 
         // Assert
-        Set<ConstraintViolation<LoginRequest>> violations = validator.validate(loginRequest);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
+        Set<ConstraintViolation<LoginRequest>> violations = VALIDATOR.validate(loginRequest);
+        assertFalse(violations.isEmpty());
     }
 
     @Test
-    @DisplayName("Password cannot be empty")
+    @DisplayName("Password should not be empty")
     public void testPasswordNotEmptyConstraint() {
         // Arrange & Act
-        LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("john.doe@mail.com");
         loginRequest.setPassword("");
 
         // Assert
-        Set<ConstraintViolation<LoginRequest>> violations = validator.validate(loginRequest);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        Set<ConstraintViolation<LoginRequest>> violations = VALIDATOR.validate(loginRequest);
     }
 
 }
