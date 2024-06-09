@@ -1,25 +1,16 @@
 package com.openclassrooms.starterjwt.security.services;
 
-import com.openclassrooms.starterjwt.repository.SessionRepository;
-import com.openclassrooms.starterjwt.repository.UserRepository;
-import com.openclassrooms.starterjwt.services.SessionService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.*;
-import org.mockito.Mock;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collection;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.util.AssertionErrors.assertNotNull;
-import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 @Log4j2
 public class UserDetailsImplTest {
     private static Instant startedAt;
-
 
     @BeforeAll
     public static void initializeTestStartTime() {
