@@ -48,8 +48,6 @@ public class UserDetailsServiceImplTest {
         log.info("Test duration : {} ms", Duration.between(startedAt, endedAt).toMillis());
     }
 
-
-
     @Test
     @DisplayName("Calling loadUserByUsername should return user details when user has been found")
     public void loadUserByUsername_ShouldReturnUserDetails() {
