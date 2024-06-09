@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class JwtResponseTest {
     private static Instant startedAt;
 
-
     @BeforeAll
     public static void initializeTestStartTime() {
         startedAt = Instant.now();
