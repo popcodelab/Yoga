@@ -48,7 +48,12 @@ public class SessionControllerTest {
 
     @BeforeEach
     public void setup() {
-        sessionController = new SessionController(sessionService, sessionMapper);
+        this.sessionController = new SessionController(sessionService, sessionMapper);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        this.sessionController = null;
     }
 
     @Test
