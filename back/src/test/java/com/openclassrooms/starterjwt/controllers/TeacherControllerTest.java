@@ -24,6 +24,12 @@ import static org.mockito.Mockito.*;
 public class TeacherControllerTest {
     private static Instant startedAt;
 
+    @Mock
+    private TeacherMapper teacherMapper;
+    @Mock
+    private TeacherService teacherService;
+    private TeacherController teacherController;
+
     @BeforeAll
     public static void initializeTestStartTime() {
         startedAt = Instant.now();
@@ -35,12 +41,6 @@ public class TeacherControllerTest {
         Instant endedAt = Instant.now();
         log.info("Test duration : {} ms", Duration.between(startedAt, endedAt).toMillis());
     }
-
-    @Mock
-    TeacherMapper teacherMapper;
-    @Mock
-    TeacherService teacherService;
-    TeacherController teacherController;
 
     @BeforeEach
     public void setup() {
