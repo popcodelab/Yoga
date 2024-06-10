@@ -5,8 +5,13 @@ import org.junit.jupiter.api.*;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashSet;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
+import java.util.HashSet;
+
+
 
 @Log4j2
 public class UserDetailsImplTest {
@@ -45,6 +50,5 @@ public class UserDetailsImplTest {
 
         assertThat(userDetailsImpl1.equals(userDetailsImpl2)).isFalse();
     }
-
 
 }
