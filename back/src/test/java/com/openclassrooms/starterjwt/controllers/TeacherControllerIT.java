@@ -52,7 +52,8 @@ public class TeacherControllerIT {
     @Tag("FindById")
     @Test
     @WithMockUser(username = "yoga@studio.com")
-    @DisplayName("FindById should not find the teacher if the provided Id is unknown")
+    @DisplayName("FindById should not find the teacher when Id is unknown and return a response " +
+            "with http status NOT_FOUND")
     public void findById_WhenUnknownId_ShouldReturnResponseNotFound() throws Exception {
         mockMvc.perform(get("/api/teacher/{id}", 666L)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -61,7 +62,19 @@ public class TeacherControllerIT {
 
     @Tag("FindById")
     @Test
-    @DisplayName("If user is not authenticated, FindById should return a response with http status = UNAUTHORIZED")
+    @WithMockUser(username = "yoga@studio.com")
+    @DisplayName("FindById should not find the teacher when the provided Id is invalid and returns a response " +
+            "with http status = BAD_REQUEST")
+    public void findById_WhenInvalidId_ShouldReturnResponseNotFound() throws Exception {
+        mockMvc.perform(get("/api/teacher/{id}", "invalid_id")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Tag("FindById")
+    @Test
+    @DisplayName("If user is not authenticated, FindById should return a response " +
+            "with http status = UNAUTHORIZED")
     public void findById_WhenUserNotAuthenticated_ShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/teacher/{id}", 1L))
                 .andExpect(status().isUnauthorized());

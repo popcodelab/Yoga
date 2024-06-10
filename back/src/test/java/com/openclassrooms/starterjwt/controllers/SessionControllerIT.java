@@ -95,8 +95,7 @@ public class SessionControllerIT {
     @Tag("FindAll")
     @DisplayName("If user is not authenticated, FindAll should return a response with http status = UNAUTHORIZED")
     public void findAll_WhenUserNotAuthenticated_ShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/session")
-                        .header("Authorization", "Bearer not_a_jwt"))
+        mockMvc.perform(get("/api/session/{id}", 1L))
                 .andExpect(status().isUnauthorized());
     }
 
