@@ -64,7 +64,7 @@ public class SessionControllerIT {
     @Tag("FindById")
     @Test
     @WithMockUser(username = "yoga@studio.com")
-    @DisplayName("FindById should not find the session if the provided is unknown")
+    @DisplayName("FindById should not find the session if the provided Id is unknown")
     public void findById_WhenUnknownId_ShouldReturnResponseNotFound() throws Exception {
         Long id = 666L;
         mockMvc.perform(get("/api/session/{id}", id)
