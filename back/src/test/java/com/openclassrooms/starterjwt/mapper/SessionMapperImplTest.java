@@ -9,6 +9,7 @@ import com.openclassrooms.starterjwt.services.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,7 +40,7 @@ public class SessionMapperImplTest {
     private TeacherService teacherService;
 
     @InjectMocks
-    private SessionMapperImpl sessionMapper;
+    private SessionMapper sessionMapper = Mappers.getMapper(SessionMapper.class);
 
     @BeforeAll
     public static void initializeTestStartTime() {
