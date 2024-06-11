@@ -1,34 +1,27 @@
 package com.openclassrooms.starterjwt.mapper;
 
-import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.dto.TeacherDto;
-import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
-import com.openclassrooms.starterjwt.models.User;
-import com.openclassrooms.starterjwt.services.TeacherService;
-import com.openclassrooms.starterjwt.services.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @Log4j2
 @DisplayName("TeacherMapperImpl unit tests")
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TeacherMapperImplTest {
     private static Instant startedAt;
     private final Long id = 1L;
@@ -51,8 +44,9 @@ public class TeacherMapperImplTest {
     }
 
     @Test
+    @Order(1)
     @Tag("ToEntity")
-    @DisplayName("The mapper should convert a Teacher Dto to a Teacher entity")
+    @DisplayName("ToEntity should convert a Teacher Dto to a Teacher entity")
     public void toEntity_ShouldReturnAnEntity() {
         // Arrange
         TeacherDto  teacherDto = new TeacherDto();
@@ -71,24 +65,43 @@ public class TeacherMapperImplTest {
     }
 
     @Test
+    @Order(2)
+    @Tag("ToEntity")
+    @DisplayName("ToEntity should return a List of Teacher entities")
+    public void toEntity_ShouldReturnList() {
+        // Arrange
+        TeacherDto  teacherDto = new TeacherDto();
+        teacherDto.setId(id);
+        teacherDto.setFirstName(firstName);
+        teacherDto.setLastName(lastName);
+        List<TeacherDto> teacherDtoList = new ArrayList<>();
+        teacherDtoList.add(teacherDto);
+
+        // Act
+        List<Teacher> teacherList = teacherMapper.toEntity(teacherDtoList);
+
+        // Assert
+        assertNotNull(teacherList);
+        assertEquals(teacherList.get(0).getId(), teacherDtoList.get(0).getId());
+
+    }
+
+    @Test
+    @Order(3)
     @Tag("ToEntity")
     @DisplayName("toEntity should return null Teacher entity when convert a null Teacher Dto")
     public void toEntity_ShouldReturnNull() {
-        // Arrange
-        TeacherDto teacherDto = null;
-
         // Act
-        Teacher teacher = teacherMapper.toEntity(teacherDto);
+        Teacher teacher = teacherMapper.toEntity((TeacherDto) null);
 
         // Assert
         assertNull(teacher);
     }
 
-
-
     @Test
+    @Order(4)
     @Tag("ToDto")
-    @DisplayName("The mapper should convert a Teacher entity to a Teacher Dto")
+    @DisplayName("ToDto should convert a Teacher entity to a Teacher Dto")
     public void toDto_ShouldReturnDto() {
         // Arrange
         Teacher teacher = Teacher.builder()
@@ -108,18 +121,36 @@ public class TeacherMapperImplTest {
     }
 
     @Test
+    @Order(5)
+    @Tag("ToDto")
+    @DisplayName("ToDto should return to a List of Teacher Dtos")
+    public void toDto_ShouldReturnList() {
+        // Arrange
+        Teacher teacher = Teacher.builder()
+                .id(id)
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
+        List<Teacher> teacherList = new ArrayList<>();
+        teacherList.add(teacher);
+
+        // Act
+        List<TeacherDto> teacherDtoList = teacherMapper.toDto(teacherList);
+
+        // Assert
+        assertNotNull(teacherDtoList);
+        assertEquals(teacherList.get(0).getId(), teacherDtoList.get(0).getId());
+    }
+
+    @Test
+    @Order(6)
     @Tag("ToDto")
     @DisplayName("toDto should return null Teacher Dto when convert a null Teacher entity")
     public void toDto_ShouldReturnNull() {
-        // Arrange
-        Teacher teacher = null;
-
         // Act
-        TeacherDto teacherDto = teacherMapper.toDto(teacher);
+        TeacherDto teacherDto = teacherMapper.toDto((Teacher) null);
 
         // Assert
         assertNull(teacherDto);
     }
-
-
 }

@@ -18,8 +18,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -28,6 +30,7 @@ import static org.mockito.Mockito.when;
 @DisplayName("SessionMapperImpl unit tests")
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SessionMapperImplTest {
     private static Instant startedAt;
     private Teacher teacher;
@@ -68,8 +71,9 @@ public class SessionMapperImplTest {
     }
 
     @Test
+    @Order(1)
     @Tag("ToEntity")
-    @DisplayName("The mapper should convert a Session Dto to a Session entity")
+    @DisplayName("ToEntity should convert a Session Dto to a Session entity")
     public void toEntity_ShouldReturnAnEntity() {
         // Arrange
         SessionDto sessionDto = new SessionDto();
@@ -97,6 +101,33 @@ public class SessionMapperImplTest {
     }
 
     @Test
+    @Order(2)
+    @Tag("ToEntity")
+    @DisplayName("ToEntity should return a List of Session entities")
+    public void toEntity_ShouldReturnList() {
+        // Arrange
+        SessionDto sessionDto = new SessionDto();
+        sessionDto.setId(1L);
+        sessionDto.setDescription("Session de test");
+        sessionDto.setTeacher_id(teacher.getId());
+        sessionDto.setUsers(Arrays.asList(user.getId()));
+        List<SessionDto> sessionDtoList = new ArrayList<SessionDto>();
+        sessionDtoList.add(sessionDto);
+
+        when(teacherService.findById(teacher.getId())).thenReturn(teacher);
+        when(userService.findById(user.getId())).thenReturn(user);
+
+        // Act
+        List<Session> sessionList = sessionMapper.toEntity(sessionDtoList);
+
+        // Assert
+        assertNotNull(sessionList);
+        assertEquals(sessionDtoList.get(0).getId(), sessionList.get(0).getId());
+        assertEquals(sessionDtoList.get(0).getDescription(), sessionList.get(0).getDescription());
+    }
+
+    @Test
+    @Order(3)
     @Tag("ToEntity")
     @DisplayName("toEntity should return null Session entity when convert a null Session Dto")
     public void toEntity_ShouldReturnNull() {
@@ -110,11 +141,10 @@ public class SessionMapperImplTest {
         assertNull(session);
     }
 
-
-
     @Test
+    @Order(4)
     @Tag("ToDto")
-    @DisplayName("The mapper should convert a Session entity to a Session Dto")
+    @DisplayName("ToDto should convert a Session entity to a Session Dto")
     public void toDto_ShouldReturnDto() {
         // Arrange
         Session session = Session.builder()
@@ -138,6 +168,34 @@ public class SessionMapperImplTest {
     }
 
     @Test
+    @Order(5)
+    @Tag("ToDto")
+    @DisplayName("ToDto should return to a List of Session Dtos")
+    public void toDto_ShouldReturnList() {
+        // Arrange
+        Session session = Session.builder()
+                .id(1L)
+                .date(new Date())
+                .description("Session description")
+                .name("Session")
+                .teacher(teacher)
+                .users(Arrays.asList(user))
+                .build();
+
+        List<Session> sessionList = new ArrayList<>();
+        sessionList.add(session);
+
+        // Act
+        List<SessionDto> sessionDtoList = sessionMapper.toDto(sessionList);
+
+        // Assert
+        assertNotNull(sessionDtoList);
+        assertEquals(sessionDtoList.get(0).getId(), sessionList.get(0).getId());
+        assertEquals(sessionDtoList.get(0).getDescription(), sessionList.get(0).getDescription());
+    }
+
+    @Test
+    @Order(6)
     @Tag("ToDto")
     @DisplayName("toDto should return null Session Dto when convert a null Session entity")
     public void toDto_ShouldReturnNull() {
@@ -150,6 +208,4 @@ public class SessionMapperImplTest {
         // Assert
         assertNull(testSessionDto);
     }
-
-
 }
