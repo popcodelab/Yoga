@@ -25,13 +25,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @Log4j2
-@DisplayName("SessionMapperImpl integration tests")
+@DisplayName("SessionMapperImpl unit tests")
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class SessionMapperImplTest {
-
     private static Instant startedAt;
-
     private Teacher teacher;
     private User user;
     @Mock
@@ -56,7 +54,6 @@ public class SessionMapperImplTest {
 
     @BeforeEach
     public void setup() throws ParseException {
-        // Given
         teacher = Teacher.builder()
                 .id(1L)
                 .build();
@@ -101,7 +98,7 @@ public class SessionMapperImplTest {
 
     @Test
     @Tag("ToEntity")
-    @DisplayName("toEntity should return null when convert a null Dto")
+    @DisplayName("toEntity should return null Session entity when convert a null Session Dto")
     public void toEntity_ShouldReturnNull() {
         // Arrange
         SessionDto sessionDto = null;
@@ -142,7 +139,7 @@ public class SessionMapperImplTest {
 
     @Test
     @Tag("ToDto")
-    @DisplayName("toDto should return null when convert a null entity")
+    @DisplayName("toDto should return null Session Dto when convert a null Session entity")
     public void toDto_ShouldReturnNull() {
         // Arrange
         Session session = null;
